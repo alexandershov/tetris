@@ -10,9 +10,13 @@ class Field {
         return this._cells[y][x];
     }
 
-    set(x, y) {
+    set(x, y, value = true) {
         this._checkBorders(x, y);
-        this._cells[y][x] = true;
+        this._cells[y][x] = value;
+    }
+
+    unset(x, y) {
+        this.set(x, y, false);
     }
 
     _checkBorders(x, y) {
@@ -29,10 +33,5 @@ class Field {
             }
         }
         return result;
-    }
-
-    unset(x, y) {
-        this._checkBorders(x, y);
-        this._cells[y][x] = false;
     }
 }
