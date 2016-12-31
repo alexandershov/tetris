@@ -57,7 +57,7 @@ describe("Field", function () {
     }
 
     function makeField(s) {
-        let lines = s.split('\n')
+        let lines = s.split("\n")
             .map(aLine => aLine.trim())
             .filter(aLine => aLine !== "");
         let width = Math.max(...lines.map(aLine => aLine.length));
@@ -65,7 +65,7 @@ describe("Field", function () {
         let field = new Field(width, height);
         for (let [y, aLine] of lines.reverse().entries()) {
             for (let [x, char] of aLine.split("").entries()) {
-                if (char === 'x') {
+                if (char === "x") {
                     field.set(x, y);
                 }
             }
