@@ -19,21 +19,28 @@ class Field {
         this.set(x, y, false);
     }
 
+    unsetLine(y) {
+        for (let x = 0; x < this.width; x++) {
+            this.unset(x, y);
+        }
+
+    }
+
     clearFullLines() {
         for (let y = 0; y < this.height; y++) {
-            let isClear = true;
-            for (let x = 0; x < this.width; x++) {
-                if (!this.isSet(x, y)) {
-                    isClear = false;
-                    break
-                }
-            }
-            if (isClear) {
-                for (let x = 0; x < this.width; x++) {
-                    this.unset(x, y);
-                }
+            if (this.isLineFull(y)) {
+                this.unsetLine(y);
             }
         }
+    }
+
+    isLineFull(y) {
+        for (let x = 0; x < this.width; x++) {
+            if (!this.isSet(x, y)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     _checkBorders(x, y) {
