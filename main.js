@@ -43,6 +43,24 @@ class Field {
         return true;
     }
 
+    isEqualTo(other) {
+        if (this.width !== other.width) {
+            return false;
+        }
+        if (this.height !== other.height) {
+            return false;
+        }
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                if (this.isSet(x, y) !== other.isSet(x, y)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
     _checkBorders(x, y) {
         console.assert(x >= 0 && x < this.width, x);
         console.assert(y >= 0 && y < this.height, y);

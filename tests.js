@@ -17,11 +17,28 @@ describe("Field", function () {
         expect(field.isSet(0, 0)).toBe(false);
     });
 
-    it("clears one line", function () {
+    it("clears one full line", function () {
         let field = new Field(30, 20);
         setLine(field, 0);
         field.clearFullLines();
         expect(isLineClear(field, 0)).toBe(true);
+    });
+
+    it("clears all full lines and moves everything down", function() {
+        let field = makeField(`
+        xox
+        xxx
+        oxx
+        xxx
+`);
+        let expectedField = makeField(`
+        ooo
+        ooo
+        xox
+        oxx
+`);
+        field.clearFullLines();
+        expect(field.isEqualTo(expectedField)).toBe(true);
     });
 
     function setLine(field, y) {
@@ -37,5 +54,22 @@ describe("Field", function () {
             }
         }
         return true;
+    }
+
+    function makeField(s) {
+        let lines = s.split('\n')
+            .map(aLine => aLine.trim())
+            .filter(aLine => aLine !== "");
+        let width = Math.max(...lines.map(aLine => aLine.length));
+        let height = lines.length;
+        let field = new Field(width, height);
+        for (let [y, aLine] of lines.reverse().entries()) {
+            for (let [x, char] of aLine.split("").entries()) {
+                if (char === 'x') {
+                    field.set(x, y);
+                }
+            }
+        }
+        return field;
     }
 });
