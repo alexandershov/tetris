@@ -30,4 +30,9 @@ class Field {
         }
         return result;
     }
+
+    unset(x, y) {
+        this._checkBorders(x, y);
+        this._cells[y][x] = false;
+    }
 }
