@@ -111,6 +111,18 @@ describe("Figure", function () {
         ]);
     });
 
+    it("can copy itself", function () {
+        let figure = makeDefaultFigure();
+        let movedCopy = figure.copy();
+        movedCopy._cells.set(0, 0);
+        expect(figure.getCellPoints()).toEqual([
+            new Point(2, 4),
+            new Point(3, 4),
+            new Point(4, 4),
+            new Point(3, 5),
+        ]);
+    });
+
     it("can copy and move", function () {
         let figure = makeDefaultFigure();
         let movedCopy = figure.copyAndMove(1, 2);
