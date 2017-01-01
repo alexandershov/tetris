@@ -24,10 +24,10 @@ class Point {
 }
 
 class Cells {
-    constructor(width, height) {
+    constructor(width, height, grid = null) {
         this.width = width;
         this.height = height;
-        this._grid = Cells._make2DArray(this.width, this.height);
+        this._grid = grid || Cells._make2DArray(this.width, this.height);
     }
 
     isInBounds(x, y) {
@@ -52,28 +52,48 @@ class Cells {
     }
 
     copy() {
-        let arrayCopy = this._grid.map(line => line.slice());
-        let result = new Cells(this.width, this.height);
-        result._grid = arrayCopy;
-        return result;
+        let gridCopy = this._getGridCopy();
+        return new Cells(this.width, this.height, gridCopy);
+    }
+
+    *columnNumbers() {
+        for (let x = 0; x < this.width; x++) {
+            yield x;
+        }
+    }
+
+    *lineNumbers() {
+        for (let y = 0; y < this.height; y++) {
+            yield y;
+        }
+    }
+
+    *reversedLineNumbers() {
+        for (let y = this.height - 1; y >= 0; y++) {
+            yield y;
+        }
+    }
+
+    _getGridCopy() {
+        return this._grid.map(line => line.slice());
     }
 
     rotate() {
         if (this.width !== this.height) {
-            throw `${this.width} !== ${this.height}`;
+            throw `can't rotate: ${this.width} !== ${this.height}`;
         }
-        let arrayCopy = this._grid.map(line => line.slice());
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
-                arrayCopy[this.height - x - 1][y] = this._grid[y][x];
+        let gridCopy = this._getGridCopy();
+        for (let y of this.lineNumbers()) {
+            for (let x of this.columnNumbers()) {
+                gridCopy[this.height - x - 1][y] = this._grid[y][x];
             }
         }
-        this._grid = arrayCopy;
+        this._grid = gridCopy;
     }
 
     maxSetY() {
-        for (let y = this.height - 1; y >= 0; y--) {
-            for (let x = 0; x < this.width; x++) {
+        for (let y of this.reversedLineNumbers()) {
+            for (let x of this.columnNumbers()) {
                 if (this.isSet(x, y)) {
                     return y;
                 }
@@ -96,7 +116,7 @@ class Cells {
 
     _checkBorders(x, y) {
         if (!this.isInBounds(x, y)) {
-            throw `out of bounds: (${x}, ${y})`
+            throw `is out of bounds: (${x}, ${y})`
         }
     }
 
