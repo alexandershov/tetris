@@ -112,6 +112,7 @@ class Game {
     constructor(field, scoreIncrement = 100) {
         this.field = field;
         this.scoreIncrement = scoreIncrement;
+        this.speed = 1;
         this.score = 0;
     }
 

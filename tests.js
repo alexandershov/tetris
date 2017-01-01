@@ -17,7 +17,7 @@ describe("Field", function () {
         expect(field.isSet(0, 0)).toBe(false);
     });
 
-    it("gets the number of filled lines", function() {
+    it("gets the number of filled lines", function () {
         let field = makeField(`
         xox
         xxx
@@ -99,5 +99,21 @@ describe("Game", function () {
         let game = new Game(field, 150);
         game.onFilledLine();
         expect(game.score).toEqual(150);
+    });
+
+    it("increments speed with score", function () {
+        let field = new Field(30, 20);
+        let game = new Game(field, 150, [1000, ]);
+        for (let i = 0; i < 6; i++) {
+            game.onFilledLine();
+        }
+        expect(game.speed).toEqual(1);
+    });
+});
+
+
+describe("Figure", function () {
+    it("", function () {
+
     });
 });
