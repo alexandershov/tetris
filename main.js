@@ -274,7 +274,7 @@ class Figure {
 
 class Scorer {
     constructor(scoreIncrement = 100,
-                speedLevels = [20000, 40000, 60000]) {
+                speedLevels = [200, 400, 600]) {
         this.scoreIncrement = scoreIncrement;
         this._speedLevels = speedLevels;
         this.score = 0;
@@ -312,11 +312,11 @@ class Game {
             alert('Game over!');
             return;
         }
-        this.render();
         this.handleEvents();
+        this.render();
         if (isByTimer) {
             this.tryToMoveFigure(new Event(0, -1), true);
-            setTimeout(() => this.loop(), (4 - this.scorer.speed) * 250);
+            setTimeout(() => this.loop(), (4 - this.scorer.speed) * 150);
         }
     }
 
