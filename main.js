@@ -278,7 +278,7 @@ class Scorer {
 class Game {
     constructor(field, canvasElement, scoreElement) {
         this.field = field;
-        this.figure = this.generateFigure();
+        this.figure = this.getRandomFigure();
         this.canvasElement = canvasElement;
         this.scoreElement = scoreElement;
         this.scorer = new Scorer();
@@ -289,11 +289,10 @@ class Game {
         if (this.isOver) {
             return;
         }
-        let wasMoved = this.tryToMoveFigure(new Movement(0, -1));
-        if (!wasMoved) {
+        let canBeMoved = this.tryToMoveFigure(new Movement(0, -1));
+        if (!canBeMoved) {
             this.nailFigureToField();
             this.maybeClearFilledLines();
-            this.figure = this.generateFigure();
         }
         this.render();
         setTimeout(() => this.loop(), this.delay);
@@ -303,6 +302,7 @@ class Game {
         for (let point of this.figure.getCellPoints()) {
             this.field.set(point.x, point.y);
         }
+        this.figure = this.getRandomFigure();
     }
 
     maybeClearFilledLines() {
@@ -403,7 +403,7 @@ class Game {
         this.scoreElement.innerText = this.scorer.score.toString();
     }
 
-    generateFigure() {
+    getRandomFigure() {
         let i = Math.floor(Math.random() * KNOWN_FIGURE_CELLS.length);
         let cells = KNOWN_FIGURE_CELLS[i];
         let x = Math.floor(this.field.width / 2 - cells.width / 2);
