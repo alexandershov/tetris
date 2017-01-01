@@ -27,10 +27,16 @@ class Field {
     }
 
     clearFullLines() {
-        for (let y = 0; y < this.height; y++) {
+        let numCheckedLines = 0;
+        let y = 0;
+        while (numCheckedLines < this.height) {
             if (this.isLineFull(y)) {
                 this.unsetLine(y);
+                this.moveAboveLinesDown(y)
+            } else {
+                y++;
             }
+            numCheckedLines++;
         }
     }
 
@@ -41,6 +47,19 @@ class Field {
             }
         }
         return true;
+    }
+
+    moveAboveLinesDown(y) {
+        for (let i = y + 1; i < this.height; i++) {
+            this.copyLine(i, i - 1);
+            this.unsetLine(i);
+        }
+    }
+
+    copyLine(ySrc, yDest) {
+        for (let x = 0; x < this.width; x++) {
+            this.set(x, yDest, this.isSet(x, ySrc));
+        }
     }
 
     isEqualTo(other) {
