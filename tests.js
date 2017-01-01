@@ -105,7 +105,7 @@ describe("Scorer", function () {
         expect(scorer.score).toEqual(150);
     });
 
-    it("increments speed with score", function () {
+    it("increments speed level with score", function () {
         let scorer = new Scorer(150, [200, 350]);
         expect(scorer.speedLevel).toEqual(0);
         scorer.onFilledLine();
@@ -119,30 +119,29 @@ describe("Scorer", function () {
 
 
 describe("Figure", function () {
+    let figure;
+    const cellPoints = [
+        new Point(2, 4),
+        new Point(3, 4),
+        new Point(4, 4),
+        new Point(3, 5),
+    ];
+
+    beforeEach(function() {
+        figure = makeDefaultFigure(2, 3);
+    });
+
     it("has position", function () {
-        let figure = makeDefaultFigure(2, 3);
-        expect(figure.getCellPoints()).toEqual([
-            new Point(2, 4),
-            new Point(3, 4),
-            new Point(4, 4),
-            new Point(3, 5),
-        ]);
+        expect(figure.getCellPoints()).toEqual(cellPoints);
     });
 
     it("can copy itself", function () {
-        let figure = makeDefaultFigure(2, 3);
         let movedCopy = figure.copy();
         movedCopy.cells.set(0, 0);
-        expect(figure.getCellPoints()).toEqual([
-            new Point(2, 4),
-            new Point(3, 4),
-            new Point(4, 4),
-            new Point(3, 5),
-        ]);
+        expect(figure.getCellPoints()).toEqual(cellPoints);
     });
 
     it("can copy and move", function () {
-        let figure = makeDefaultFigure(2, 3);
         let movedCopy = figure.copyAndApplyEvent(new Event(1, 2));
         expect(movedCopy.getCellPoints()).toEqual([
             new Point(3, 6),
@@ -153,7 +152,6 @@ describe("Figure", function () {
     });
 
     it("can copy and rotate", function () {
-        let figure = makeDefaultFigure(2, 3);
         let rotatedCopy = figure.copyAndApplyEvent(new Event(0, 0, true));
         let expectedFigure = makeFigure(2, 3, `
         oxo
@@ -171,7 +169,6 @@ describe("Figure", function () {
 function makeField(s) {
     return new Field(makeCells(s));
 }
-
 
 function makeDefaultFigure(x, y) {
     return makeFigure(x, y, `
