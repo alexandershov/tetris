@@ -84,14 +84,13 @@ describe("Field", function () {
     }
 
     function isLineClear(field, y) {
-        for (let x = 0; x < field.width; x++) {
-            if (field.cells.isSet(x, y)) {
+        for (let x of field.columnNumbers()) {
+            if (field.isSet(x, y)) {
                 return false;
             }
         }
         return true;
     }
-
 });
 
 describe("Scorer", function () {
