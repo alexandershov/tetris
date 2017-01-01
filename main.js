@@ -92,6 +92,18 @@ class Cells {
         this.cells = arrayCopy;
     }
 
+    maxSetY() {
+        for (let y = this.height - 1; y >= 0; y--) {
+            for (let x = 0; x < this.width; x++) {
+                if (this.isSet(x, y)) {
+                    return y;
+                }
+            }
+        }
+        return -1;
+    }
+
+
     static _make2DArray(width, height) {
         let result = new Array(height);
         for (let i = 0; i < height; i++) {
@@ -403,7 +415,11 @@ class Game {
         let i = Math.floor(Math.random() * KNOWN_CELLS.length);
         let cells = KNOWN_CELLS[i];
         let x = Math.floor(this.field.width / 2 - cells.width / 2);
-        let y = this.field.height - cells.height - 1;
+        let maxSetY = cells.maxSetY();
+        if (maxSetY === -1) {
+            throw `maxSetY is equal to ${maxSetY}`;
+        }
+        let y = this.field.height - cells.maxSetY() - 1;
         console.log('putting new figure at', x, y);
         return new Figure(x, y, cells);
     }
