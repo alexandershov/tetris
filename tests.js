@@ -1,22 +1,24 @@
-describe("Field", function () {
+describe("Cells", function () {
     it("is unset by default", function () {
-        let field = new Field(30, 20);
-        expect(field.isSet(0, 0)).toBe(false);
+        let cells = new Cells(30, 20);
+        expect(cells.isSet(0, 0)).toBe(false);
     });
 
     it("sets cells", function () {
-        let field = new Field(30, 20);
-        field.set(0, 0);
-        expect(field.isSet(0, 0)).toBe(true);
+        let cells = new Cells(30, 20);
+        cells.set(0, 0);
+        expect(cells.isSet(0, 0)).toBe(true);
     });
 
     it("unsets cells", function () {
-        let field = new Field(30, 20);
-        field.set(0, 0);
-        field.unset(0, 0);
-        expect(field.isSet(0, 0)).toBe(false);
+        let cells = new Cells(30, 20);
+        cells.set(0, 0);
+        cells.unset(0, 0);
+        expect(cells.isSet(0, 0)).toBe(false);
     });
+});
 
+describe("Field", function () {
     it("gets the number of filled lines", function () {
         let field = makeField(`
         xox
@@ -48,18 +50,18 @@ describe("Field", function () {
         oxx
 `);
         field.clearFilledLines();
-        expect(field.isEqualTo(expectedField)).toBe(true);
+        expect(field._cells.isEqualTo(expectedField._cells)).toBe(true);
     });
 
     function setLine(field, y) {
         for (let x = 0; x < field.width; x++) {
-            field.set(x, y);
+            field._cells.set(x, y);
         }
     }
 
     function isLineClear(field, y) {
         for (let x = 0; x < field.width; x++) {
-            if (field.isSet(x, y)) {
+            if (field._cells.isSet(x, y)) {
                 return false;
             }
         }
@@ -75,34 +77,34 @@ describe("Field", function () {
             .filter(aLine => aLine !== "");
         let width = Math.max(...lines.map(aLine => aLine.length));
         let height = lines.length;
-        let field = new Field(width, height);
+        let cells = new Cells(width, height);
         for (let [y, aLine] of lines.reverse().entries()) {
             for (let [x, char] of aLine.split("").entries()) {
                 if (char === "x") {
-                    field.set(x, y);
+                    cells.set(x, y);
                 }
             }
         }
-        return field;
+        return new Field(cells);
     }
 });
 
 describe("Game", function () {
     it("has zero initial score", function () {
-        let field = new Field(30, 20);
+        let field = new Field(new Cells(30, 20));
         let game = new Game(field);
         expect(game.score).toEqual(0);
     });
 
     it("increments score", function () {
-        let field = new Field(30, 20);
+        let field = new Field(new Cells(30, 20));
         let game = new Game(field, 150);
         game.onFilledLine();
         expect(game.score).toEqual(150);
     });
 
     it("increments speed with score", function () {
-        let field = new Field(30, 20);
+        let field = new Field(new Cells(30, 20));
         let game = new Game(field, 150, [1000, 1100]);
         expect(game.speed).toEqual(0);
         for (let i = 0; i < 6; i++) {
