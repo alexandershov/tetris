@@ -291,21 +291,22 @@ class Game {
         this.scoreElement = scoreElement;
         this.scorer = new Scorer();
         this.scale = 20;
-        this.movements = [];
     }
 
-    loop(isByTimer = true) {
-        this.setFigureIfAbsent();
+    loop() {
+        let addedFigure = this.setFigureIfAbsent();
+        if (addedFigure) {
+            this.render();
+        }
         if (this.isOver) {
             alert('Game over!');
             return;
         }
-        this.handleMovements();
-        this.render();
-        if (isByTimer) {
+        if (!addedFigure) {
             this.tryToMoveFigure(new Movement(0, -1), true);
-            setTimeout(() => this.loop(), (4 - this.scorer.speedLevel) * 150);
+            this.render();
         }
+        setTimeout(() => this.loop(), (4 - this.scorer.speedLevel) * 150);
     }
 
     get isOver() {
@@ -315,9 +316,10 @@ class Game {
 
     setFigureIfAbsent() {
         if (this.figure !== null) {
-            return;
+            return false;
         }
         this.figure = this.generateFigure();
+        return true;
     }
 
     render() {
@@ -353,8 +355,8 @@ class Game {
     }
 
     renderField() {
-        for (let x = 0; x < this.field.width; x++) {
-            for (let y = 0; y < this.field.height; y++) {
+        for (let x of this.field.columnNumbers()) {
+            for (let y of this.field.lineNumbers()) {
                 if (this.field.isSet(x, y)) {
                     this.renderSquare(x, y);
                 }
@@ -363,6 +365,9 @@ class Game {
     }
 
     renderFigure() {
+        if (this.figure === null) {
+            return;
+        }
         for (let point of this.figure.getCellPoints()) {
             this.renderSquare(point.x, point.y);
         }
@@ -389,8 +394,7 @@ class Game {
             if (EVENT_TO_MOVEMENT_MAPPING.has(event.key)) {
                 console.log('got event', event.key);
                 let movement = EVENT_TO_MOVEMENT_MAPPING.get(event.key);
-                this.movements.push(movement);
-                this.loop(false);
+                this.handleMovement(movement);
             }
         });
     }
@@ -413,6 +417,9 @@ class Game {
     }
 
     tryToMoveFigure(movement, createNewIfImpossible) {
+        if (this.figure === null) {
+            return;
+        }
         let movedFigure = this.figure.copyAndApplyMovement(movement);
         if (this.field.canPlaceFigure(movedFigure)) {
             this.figure = movedFigure;
@@ -429,13 +436,10 @@ class Game {
         }
     }
 
-    handleMovements() {
-        if (this.movements.length === 0) {
-            return;
-        }
-        let movement = this.movements[0];
+    handleMovement(movement) {
+        console.log('handling movement', movement);
         this.tryToMoveFigure(movement);
-        this.movements = this.movements.slice(1);
+        this.render();
     }
 }
 
