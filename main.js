@@ -137,6 +137,12 @@ class Field {
 
     }
 
+    *columnNumbers() {
+        for (let x = 0; x < this.width; x++) {
+            yield x;
+        }
+}
+
     getFilledLines() {
         let result = [];
         for (let y = 0; y < this.height; y++) {

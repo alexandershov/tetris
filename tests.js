@@ -78,7 +78,7 @@ describe("Field", function () {
     });
 
     function setLine(field, y) {
-        for (let x = 0; x < field.width; x++) {
+        for (let x of field.columnNumbers()) {
             field.set(x, y);
         }
     }
