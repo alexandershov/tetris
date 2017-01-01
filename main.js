@@ -211,14 +211,6 @@ class Figure {
         this.cells = cells;
     }
 
-    get width() {
-        return this.cells.width;
-    }
-
-    get height() {
-        return this.cells.height;
-    }
-
     getCellPoints() {
         let cellPoints = [];
         for (let y of this.cells.lineNumbers()) {
@@ -286,7 +278,7 @@ class Scorer {
 class Game {
     constructor(field, canvasElement, scoreElement) {
         this.field = field;
-        this.figure = null;
+        this.figure = this.generateFigure();
         this.canvasElement = canvasElement;
         this.scoreElement = scoreElement;
         this.scorer = new Scorer();
@@ -294,32 +286,18 @@ class Game {
     }
 
     loop() {
-        let addedFigure = this.setFigureIfAbsent();
-        if (addedFigure) {
-            this.render();
-        }
         if (this.isOver) {
             alert('Game over!');
             return;
         }
-        if (!addedFigure) {
-            this.tryToMoveFigure(new Movement(0, -1), true);
-            this.render();
-        }
+        this.tryToMoveFigure(new Movement(0, -1), true);
+        this.render();
         setTimeout(() => this.loop(), (4 - this.scorer.speedLevel) * 150);
     }
 
     get isOver() {
         return !this.field.canPlaceFigure(this.figure);
 
-    }
-
-    setFigureIfAbsent() {
-        if (this.figure !== null) {
-            return false;
-        }
-        this.figure = this.generateFigure();
-        return true;
     }
 
     render() {
@@ -417,9 +395,6 @@ class Game {
     }
 
     tryToMoveFigure(movement, createNewIfImpossible) {
-        if (this.figure === null) {
-            return;
-        }
         let movedFigure = this.figure.copyAndApplyMovement(movement);
         if (this.field.canPlaceFigure(movedFigure)) {
             this.figure = movedFigure;
@@ -431,8 +406,8 @@ class Game {
                 console.log('line', line, 'is filled');
                 this.scorer.onFilledLine();
             }
-            this.figure = null;
             this.field.clearFilledLines();
+            this.figure = this.generateFigure();
         }
     }
 
