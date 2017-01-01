@@ -385,7 +385,7 @@ class Game {
     }
 
     listenToEvents() {
-        document.addEventListener('keyup', keyUpEvent => {
+        document.addEventListener('keydown', keyUpEvent => {
             if (KNOWN_EVENTS.has(keyUpEvent.key)) {
                 console.log('got event', keyUpEvent.key);
                 let event = KNOWN_EVENTS.get(keyUpEvent.key);
@@ -462,6 +462,47 @@ const KNOWN_CELLS = [
       ooxoo
       oxxxo
       ooooo
+      ooooo
+`),
+    makeCells(`
+      ooooo
+      ooxoo
+      ooxoo
+      ooxoo
+      ooxoo
+`),
+    makeCells(`
+      oooo
+      oxxo
+      oxxo
+      oooo
+`),
+    makeCells(`
+      ooooo
+      ooxxo
+      ooxoo
+      ooxoo
+      ooooo
+`),
+    makeCells(`
+      ooooo
+      oxxoo
+      ooxoo
+      ooxoo
+      ooooo
+`),
+    makeCells(`
+      ooooo
+      oooxo
+      ooxxo
+      ooxoo
+      ooooo
+`),
+    makeCells(`
+      ooooo
+      oxooo
+      oxxoo
+      ooxoo
       ooooo
 `),
 ];
