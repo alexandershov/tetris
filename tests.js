@@ -22,15 +22,18 @@ describe("Cells", function () {
 
 describe("Field", function () {
     let emptyField;
-    let notEmptyField = makeField(`
+    let notEmptyField;
+
+    beforeEach(function () {
+        let cells = new Cells(30, 20);
+
+        emptyField = new Field(cells);
+        notEmptyField = makeField(`
         xox
         xxx
         oxx
         xxx
 `);
-    beforeEach(function() {
-        let cells = new Cells(30, 20);
-        emptyField = new Field(cells);
     });
 
     it("gets the indexes of filled lines", function () {
