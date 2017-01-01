@@ -3,7 +3,6 @@ class Point {
         this.x = x;
         this.y = y;
     }
-
 }
 
 class Cells {
@@ -42,6 +41,13 @@ class Cells {
 
     unset(x, y) {
         this.set(x, y, false);
+    }
+
+    copy() {
+        let arrayCopy = this.cells.map(line => line.slice());
+        let result = new Cells(this.width, this.height);
+        result.cells = arrayCopy;
+        return result;
     }
 
     static _make2DArray(width, height) {
@@ -160,6 +166,25 @@ class Figure {
             }
         }
         return cellPoints;
+    }
+
+    copyAndMove(deltaX, deltaY) {
+        let copy = this.copy();
+        copy.move(deltaX, deltaY);
+        return copy;
+    }
+
+    move(deltaX, deltaY) {
+        this.x += deltaX;
+        this.y += deltaY;
+    }
+
+    copy() {
+        return new Figure(
+            this.x,
+            this.y,
+            this._cells.copy()
+        );
     }
 }
 

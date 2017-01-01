@@ -102,16 +102,23 @@ describe("Game", function () {
 
 describe("Figure", function () {
     it("has position", function () {
-        let figure = makeFigure(2, 3, `
-        oxo
-        xxx
-        ooo
-`);
+        let figure = makeDefaultFigure();
         expect(figure.getCellPoints()).toEqual([
             new Point(2, 4),
             new Point(3, 4),
             new Point(4, 4),
             new Point(3, 5),
+        ]);
+    });
+
+    it("can copy and move", function () {
+        let figure = makeDefaultFigure();
+        let movedCopy = figure.copyAndMove(1, 2);
+        expect(movedCopy.getCellPoints()).toEqual([
+            new Point(3, 6),
+            new Point(4, 6),
+            new Point(5, 6),
+            new Point(4, 7),
         ]);
     });
 });
@@ -122,6 +129,15 @@ describe("Figure", function () {
  */
 function makeField(s) {
     return new Field(makeCells(s));
+}
+
+
+function makeDefaultFigure() {
+    return makeFigure(2, 3, `
+        oxo
+        xxx
+        ooo
+`);
 }
 
 /**
