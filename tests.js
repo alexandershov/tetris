@@ -133,6 +133,17 @@ describe("Figure", function () {
             new Point(4, 7),
         ]);
     });
+
+    it("can copy and rotate", function () {
+        let figure = makeDefaultFigure();
+        let rotatedCopy = figure.copyAndRotate();
+        let expectedFigure = makeFigure(2, 3, `
+        oxo
+        oxx
+        oxo
+`);
+        expect(rotatedCopy).toEqual(expectedFigure);
+    });
 });
 
 

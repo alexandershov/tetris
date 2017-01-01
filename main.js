@@ -50,6 +50,19 @@ class Cells {
         return result;
     }
 
+    rotate() {
+        if (this.width !== this.height) {
+            throw `${this.width} !== ${this.height}`;
+        }
+        let arrayCopy = this.cells.map(line => line.slice());
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                arrayCopy[this.height - x - 1][y] = this.cells[y][x];
+            }
+        }
+        this.cells = arrayCopy;
+    }
+
     static _make2DArray(width, height) {
         let result = new Array(height);
         for (let i = 0; i < height; i++) {
@@ -178,6 +191,18 @@ class Figure {
         this.x += deltaX;
         this.y += deltaY;
     }
+
+    copyAndRotate() {
+        let copy = this.copy();
+        copy.rotate();
+        return copy;
+    }
+
+
+    rotate() {
+        this._cells.rotate();
+    }
+
 
     copy() {
         return new Figure(
