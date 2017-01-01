@@ -62,7 +62,7 @@ class Cells {
         }
     }
 
-    *lineNumbers(start=0) {
+    *lineNumbers(start = 0) {
         for (let y = start; y < this.height; y++) {
             yield y;
         }
