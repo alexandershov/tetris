@@ -26,7 +26,7 @@ class Field {
 
     }
 
-    clearFullLines() {
+    clearFilledLines() {
         let numCheckedLines = 0;
         let y = 0;
         while (numCheckedLines < this.height) {

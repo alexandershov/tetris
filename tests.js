@@ -17,14 +17,14 @@ describe("Field", function () {
         expect(field.isSet(0, 0)).toBe(false);
     });
 
-    it("clears one full line", function () {
+    it("clears one filled line", function () {
         let field = new Field(30, 20);
         setLine(field, 0);
-        field.clearFullLines();
+        field.clearFilledLines();
         expect(isLineClear(field, 0)).toBe(true);
     });
 
-    it("clears all full lines and moves everything down", function() {
+    it("clears all filled lines and moves everything down", function() {
         let field = makeField(`
         xox
         xxx
@@ -37,7 +37,7 @@ describe("Field", function () {
         xox
         oxx
 `);
-        field.clearFullLines();
+        field.clearFilledLines();
         expect(field.isEqualTo(expectedField)).toBe(true);
     });
 
