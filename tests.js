@@ -79,7 +79,7 @@ describe("Field", function () {
 
     function setLine(field, y) {
         for (let x = 0; x < field.width; x++) {
-            field.cells.set(x, y);
+            field.set(x, y);
         }
     }
 
