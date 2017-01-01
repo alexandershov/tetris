@@ -289,9 +289,32 @@ class Game {
         if (this.isOver) {
             return;
         }
-        this.tryToMoveFigure(new Movement(0, -1), true);
+        let wasMoved = this.tryToMoveFigure(new Movement(0, -1));
+        if (!wasMoved) {
+            this.nailFigureToField();
+            this.maybeClearFilledLines();
+            this.figure = this.generateFigure();
+        }
         this.render();
-        setTimeout(() => this.loop(), (4 - this.scorer.speedLevel) * 150);
+        setTimeout(() => this.loop(), this.delay);
+    }
+
+    nailFigureToField() {
+        for (let point of this.figure.getCellPoints()) {
+            this.field.set(point.x, point.y);
+        }
+    }
+
+    maybeClearFilledLines() {
+        for (let line of this.field.getFilledLines()) {
+            console.log('line', line, 'is filled');
+            this.scorer.onFilledLine();
+        }
+        this.field.clearFilledLines();
+    }
+
+    get delay() {
+        return (4 - this.scorer.speedLevel) * 150;
     }
 
     get isOver() {
@@ -393,21 +416,13 @@ class Game {
         return new Figure(x, y, cells);
     }
 
-    // TODO: move out flag out of this function
-    tryToMoveFigure(movement, createNewIfImpossible) {
+    tryToMoveFigure(movement) {
         let movedFigure = this.figure.copyAndApplyMovement(movement);
         if (this.field.canPlaceFigure(movedFigure)) {
             this.figure = movedFigure;
-        } else if (createNewIfImpossible) {
-            for (let point of this.figure.getCellPoints()) {
-                this.field.set(point.x, point.y);
-            }
-            for (let line of this.field.getFilledLines()) {
-                console.log('line', line, 'is filled');
-                this.scorer.onFilledLine();
-            }
-            this.field.clearFilledLines();
-            this.figure = this.generateFigure();
+            return true;
+        } else {
+            return false;
         }
     }
 
