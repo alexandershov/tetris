@@ -1,3 +1,5 @@
+const KNOWN_EVENTS = new Set();
+
 class Point {
     constructor(x, y) {
         this.x = x;
@@ -257,5 +259,92 @@ class Scorer {
             }
         }
         return this._speedLevels.length;
+    }
+}
+
+
+class Game {
+    constructor(field, canvasElement, scoreElement) {
+        this.field = field;
+        this.canvasElement = canvasElement;
+        this.scoreElement = scoreElement;
+        this.scorer = new Scorer();
+        this.events = [];
+    }
+
+    loop() {
+        this.render();
+        setTimeout(this.loop, (4 - this.scorer.speed) * 250);
+    }
+
+    render() {
+        this.renderScore();
+        this.clearCanvas();
+        this.renderField();
+    }
+
+    prepareCanvas(width, height) {
+        this.canvasElement.width = this.unitsToPixelsSize(width);
+        this.canvasElement.height = this.unitsToPixelsSize(height);
+    }
+
+    pixelsToUnitsSize(pixels) {
+        return pixels / this.scale;
+    }
+
+    unitsToPixelsSize(units) {
+        return units * this.scale;
+    }
+
+    get context() {
+        return this.canvasElement.getContext('2d');
+    }
+
+    renderSquare(x, y) {
+        let topLeft = this.topLeftPoint(x, y);
+        console.log('drawing square at', topLeft.x, topLeft.y);
+        this.context.fillRect(topLeft.x, topLeft.y, this.scale, this.scale);
+    }
+
+    clearCanvas() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    renderField() {
+        for (let x = 0; x < this.field.width; x++) {
+            for (let y = 0; y < this.field.height; y++) {
+                if (this.field.cells.isSet(x, y)) {
+                    this.renderSquare(x, y);
+                }
+            }
+        }
+    }
+
+    topLeftPoint(x, y) {
+        let pixelX = this.unitsToPixelsSize(x);
+        let pixelY = this.unitsToPixelsSize(this.field.height) - this.unitsToPixelsSize(y) - this.scale;
+        return new Point(pixelX, pixelY);
+    }
+
+    static run() {
+        let field = new Field(new Cells(12, 30));
+        let canvasElement = document.getElementById('field-canvas');
+        let scoreElement = document.getElementById('score');
+        let game = new Game(field, canvasElement, scoreElement);
+        game.listenToEvents();
+        game.loop();
+    }
+
+    listenToEvents() {
+        document.addEventListener('keydown', function (event) {
+            if (KNOWN_EVENTS.has(event.key)) {
+                this.events.push(event.key);
+                console.log('got event', event.key);
+            }
+        });
+    }
+
+    renderScore() {
+        this.scoreElement.innerText = this.scorer.score.toString();
     }
 }
