@@ -126,6 +126,15 @@ class Field {
 }
 
 
+class Figure {
+    constructor(x, y, cells) {
+        this.x = x;
+        this.y = y;
+        this._cells = cells;
+    }
+}
+
+
 class Game {
     constructor(field,
                 scoreIncrement = 100,

@@ -68,25 +68,6 @@ describe("Field", function () {
         return true;
     }
 
-    /**
-     * @return {Field}
-     */
-    function makeField(s) {
-        let lines = s.split("\n")
-            .map(aLine => aLine.trim())
-            .filter(aLine => aLine !== "");
-        let width = Math.max(...lines.map(aLine => aLine.length));
-        let height = lines.length;
-        let cells = new Cells(width, height);
-        for (let [y, aLine] of lines.reverse().entries()) {
-            for (let [x, char] of aLine.split("").entries()) {
-                if (char === "x") {
-                    cells.set(x, y);
-                }
-            }
-        }
-        return new Field(cells);
-    }
 });
 
 describe("Game", function () {
@@ -120,7 +101,47 @@ describe("Game", function () {
 
 
 describe("Figure", function () {
-    it("", function () {
-
+    it("has position", function () {
+        let figure = makeFigure(`
+        oxo
+        xxx
+        ooo
+`);
     });
 });
+
+
+/**
+ * @return {Field}
+ */
+function makeField(s) {
+    return new Field(makeCells(s));
+}
+
+/**
+ * @return {Figure}
+ */
+function makeFigure(s) {
+    return new Figure(makeCells(s));
+}
+
+
+/**
+ * @return {Cells}
+ */
+function makeCells(s) {
+    let lines = s.split("\n")
+        .map(aLine => aLine.trim())
+        .filter(aLine => aLine !== "");
+    let width = Math.max(...lines.map(aLine => aLine.length));
+    let height = lines.length;
+    let cells = new Cells(width, height);
+    for (let [y, aLine] of lines.reverse().entries()) {
+        for (let [x, char] of aLine.split("").entries()) {
+            if (char === "x") {
+                cells.set(x, y);
+            }
+        }
+    }
+    return cells;
+}
