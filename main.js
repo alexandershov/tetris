@@ -288,7 +288,7 @@ class Game {
             alert('Game over!');
         }
         this.render();
-        this.tryToMoveFigureDown();
+        this.tryToMoveFigure(0, -1, true);
         setTimeout(() => this.loop(), (4 - this.scorer.speed) * 250);
     }
 
@@ -362,7 +362,7 @@ class Game {
     }
 
     static run() {
-        let field = new Field(new Cells(12, 15));
+        let field = new Field(new Cells(20, 30));
         let canvasElement = document.getElementById('field-canvas');
         let scoreElement = document.getElementById('score');
         let game = new Game(field, canvasElement, scoreElement);
@@ -387,17 +387,19 @@ class Game {
     generateFigure() {
         let i = Math.floor(Math.random() * KNOWN_CELLS.length);
         let cells = KNOWN_CELLS[i];
-
-        return new Figure(x, y, cells)
+        let x = Math.floor(this.field.width / 2 - cells.width / 2);
+        let y = this.field.height - cells.height - 1;
+        console.log('putting new figure at', x, y);
+        return new Figure(x, y, cells);
     }
 
-    tryToMoveFigureDown() {
-        let movedDown = this.figure.copyAndMove(0, -1);
-        if (this.field.canPlaceFigure(movedDown)) {
-            this.figure = movedDown;
-        } else {
+    tryToMoveFigure(deltaX, deltaY, createNewIfImpossible) {
+        let movedFigure = this.figure.copyAndMove(deltaX, deltaY);
+        if (this.field.canPlaceFigure(movedFigure)) {
+            this.figure = movedFigure;
+        } else if (createNewIfImpossible) {
             for (let point of this.figure.getCellPoints()) {
-                this.field.set(point.x, point, y)
+                this.field.set(point.x, point.y);
             }
             this.figure = null;
         }
