@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <title>Tetris</title>
     <script src="main.js"></script>
+    <style>
+        #field {
+            border: solid black 1px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello!</h1>
+    <canvas id="field"></canvas>
+    <span id="score">8</span>
     <script>
         document.addEventListener('keydown', function (event) {
             console.log('keydown', event.key);
