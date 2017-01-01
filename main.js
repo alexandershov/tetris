@@ -221,8 +221,8 @@ class Figure {
 
     getCellPoints() {
         let cellPoints = [];
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
+        for (let y of this.cells.lineNumbers()) {
+            for (let x of this.cells.columnNumbers()) {
                 if (this.cells.isSet(x, y)) {
                     let point = new Point(this.x + x, this.y + y);
                     cellPoints.push(point);
@@ -250,7 +250,6 @@ class Figure {
         this.cells.rotate();
     }
 
-
     copy() {
         return new Figure(
             this.x,
@@ -264,13 +263,13 @@ class Figure {
 class Scorer {
     constructor(scoreIncrement = 100,
                 speedLevels = [200, 400, 600]) {
-        this.scoreIncrement = scoreIncrement;
-        this._speedLevels = speedLevels;
         this.score = 0;
+        this._scoreIncrement = scoreIncrement;
+        this._speedLevels = speedLevels;
     }
 
     onFilledLine() {
-        this.score += this.scoreIncrement;
+        this.score += this._scoreIncrement;
     }
 
     get speedLevel() {
