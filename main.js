@@ -109,15 +109,26 @@ class Field {
 
 
 class Game {
-    constructor(field, scoreIncrement = 100) {
+    constructor(field,
+                scoreIncrement = 100,
+                speedLevels = [20000, 40000, 60000]) {
         this.field = field;
         this.scoreIncrement = scoreIncrement;
-        this.speed = 1;
+        this._speedLevels = speedLevels;
         this.score = 0;
     }
 
     onFilledLine() {
         this.score += this.scoreIncrement;
+    }
+
+    get speed() {
+        for (let [i, level] of this._speedLevels.entries()) {
+            if (this.score < level) {
+                return i;
+            }
+        }
+        return this._speedLevels.length;
     }
 }
 

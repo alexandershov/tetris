@@ -103,11 +103,16 @@ describe("Game", function () {
 
     it("increments speed with score", function () {
         let field = new Field(30, 20);
-        let game = new Game(field, 150, [1000, ]);
+        let game = new Game(field, 150, [1000, 1100]);
+        expect(game.speed).toEqual(0);
         for (let i = 0; i < 6; i++) {
             game.onFilledLine();
         }
+        expect(game.speed).toEqual(0);
+        game.onFilledLine();
         expect(game.speed).toEqual(1);
+        game.onFilledLine();
+        expect(game.speed).toEqual(2);
     });
 });
 
