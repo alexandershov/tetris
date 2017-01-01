@@ -285,7 +285,11 @@ class Game {
         this.scale = 20;
     }
 
-    loop() {
+    scheduleLoopIteration() {
+        setTimeout(() => this.doLoopIteration(), this.delay);
+    }
+
+    doLoopIteration() {
         if (this.isOver) {
             return;
         }
@@ -295,7 +299,7 @@ class Game {
             this.maybeClearFilledLines();
         }
         this.render();
-        setTimeout(() => this.loop(), this.delay);
+        this.scheduleLoopIteration()
     }
 
     nailFigureToField() {
@@ -386,7 +390,8 @@ class Game {
         let game = new Game(field, canvasElement, scoreElement);
         game.prepareCanvas();
         game.listenToEvents();
-        game.loop();
+        game.render();
+        game.scheduleLoopIteration();
     }
 
     listenToEvents() {
