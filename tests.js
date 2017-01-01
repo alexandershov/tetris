@@ -1,6 +1,6 @@
 describe("Cells", function () {
     let cells;
-    beforeEach(function() {
+    beforeEach(function () {
         cells = new Cells(30, 20);
     });
 
@@ -21,62 +21,57 @@ describe("Cells", function () {
 });
 
 describe("Field", function () {
-    it("gets the number of filled lines", function () {
-        let field = makeField(`
+    let emptyField;
+    let notEmptyField = makeField(`
         xox
         xxx
         oxx
         xxx
 `);
-        expect(field.getFilledLines()).toEqual([0, 2]);
+    beforeEach(function() {
+        let cells = new Cells(30, 20);
+        emptyField = new Field(cells);
+    });
+
+    it("gets the indexes of filled lines", function () {
+        expect(notEmptyField.getFilledLines()).toEqual([0, 2]);
     });
 
     it("clears one filled line", function () {
-        let field = new Field(30, 20);
-        setLine(field, 0);
-        field.clearFilledLines();
-        expect(isLineClear(field, 0)).toBe(true);
+        setLine(emptyField, 0);
+        emptyField.clearFilledLines();
+        expect(isLineClear(emptyField, 0)).toBe(true);
     });
 
     it("clears all filled lines and moves everything down", function () {
-        let field = makeField(`
-        xox
-        xxx
-        oxx
-        xxx
-`);
         let expectedField = makeField(`
         ooo
         ooo
         xox
         oxx
 `);
-        field.clearFilledLines();
-        expect(field._cells.isEqualTo(expectedField._cells)).toBe(true);
+        notEmptyField.clearFilledLines();
+        expect(notEmptyField._cells.isEqualTo(expectedField._cells)).toBe(true);
     });
 
-    it("allows valid figure to be placed", function() {
+    it("allows valid figure to be placed", function () {
         let figure = makeDefaultFigure(0, 0);
-        let field = new Field(new Cells(30, 20));
-        expect(field.canPlaceFigure(figure)).toBe(true);
+        expect(emptyField.canPlaceFigure(figure)).toBe(true);
     });
 
-    it("allows valid figure to be placed", function() {
+    it("allows valid figure to be placed", function () {
         let figure = makeDefaultFigure(0, -1);
-        let field = new Field(new Cells(30, 20));
-        expect(field.canPlaceFigure(figure)).toBe(true);
+        expect(emptyField.canPlaceFigure(figure)).toBe(true);
     });
 
-    it("disallows out of bounds (by x) figure to be placed", function() {
+    it("disallows out of bounds (by x) figure to be placed", function () {
         let figure = makeDefaultFigure(-1, -1);
-        let field = new Field(new Cells(30, 20));
-        expect(field.canPlaceFigure(figure)).toBe(false);
+        expect(emptyField.canPlaceFigure(figure)).toBe(false);
     });
 
-    it("disallows out of bounds (by y) figure to be placed", function() {
+    it("disallows out of bounds (by y) figure to be placed", function () {
         let figure = makeDefaultFigure(0, -2);
-        let field = new Field(new Cells(30, 20));
-        expect(field.canPlaceFigure(figure)).toBe(false);
+        expect(emptyField.canPlaceFigure(figure)).toBe(false);
     });
 
     function setLine(field, y) {
