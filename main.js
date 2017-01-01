@@ -238,11 +238,9 @@ class Figure {
 }
 
 
-class Game {
-    constructor(field,
-                scoreIncrement = 100,
+class Scorer {
+    constructor(scoreIncrement = 100,
                 speedLevels = [20000, 40000, 60000]) {
-        this.field = field;
         this.scoreIncrement = scoreIncrement;
         this._speedLevels = speedLevels;
         this.score = 0;
@@ -261,4 +259,3 @@ class Game {
         return this._speedLevels.length;
     }
 }
-

@@ -94,23 +94,20 @@ describe("Field", function () {
 
 });
 
-describe("Game", function () {
+describe("Scorer", function () {
     it("has zero initial score", function () {
-        let field = new Field(new Cells(30, 20));
-        let game = new Game(field);
+        let game = new Scorer();
         expect(game.score).toEqual(0);
     });
 
     it("increments score", function () {
-        let field = new Field(new Cells(30, 20));
-        let game = new Game(field, 150);
+        let game = new Scorer(150);
         game.onFilledLine();
         expect(game.score).toEqual(150);
     });
 
     it("increments speed with score", function () {
-        let field = new Field(new Cells(30, 20));
-        let game = new Game(field, 150, [1000, 1100]);
+        let game = new Scorer(150, [1000, 1100]);
         expect(game.speed).toEqual(0);
         for (let i = 0; i < 6; i++) {
             game.onFilledLine();
