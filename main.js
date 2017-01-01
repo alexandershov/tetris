@@ -95,5 +95,18 @@ class Field {
         }
         return result;
     }
-
 }
+
+
+class Game {
+    constructor(field, scoreIncrement = 100) {
+        this.field = field;
+        this.scoreIncrement = scoreIncrement;
+        this.score = 0;
+    }
+
+    onFilledLine() {
+        this.score += this.scoreIncrement;
+    }
+}
+

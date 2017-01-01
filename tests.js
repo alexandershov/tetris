@@ -24,7 +24,7 @@ describe("Field", function () {
         expect(isLineClear(field, 0)).toBe(true);
     });
 
-    it("clears all filled lines and moves everything down", function() {
+    it("clears all filled lines and moves everything down", function () {
         let field = makeField(`
         xox
         xxx
@@ -72,4 +72,19 @@ describe("Field", function () {
         }
         return field;
     }
+});
+
+describe("Game", function () {
+    it("has zero initial score", function () {
+        let field = new Field(30, 20);
+        let game = new Game(field);
+        expect(game.score).toEqual(0);
+    });
+
+    it("increments score", function () {
+        let field = new Field(30, 20);
+        let game = new Game(field, 150);
+        game.onFilledLine();
+        expect(game.score).toEqual(150);
+    });
 });
