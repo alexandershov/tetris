@@ -59,6 +59,18 @@ describe("Field", function () {
         expect(field.canPlaceFigure(figure)).toBe(true);
     });
 
+    it("allows valid figure to be placed", function() {
+        let figure = makeDefaultFigure(0, -1);
+        let field = new Field(new Cells(30, 20));
+        expect(field.canPlaceFigure(figure)).toBe(true);
+    });
+
+    it("disallows out of bounds figure to be placed", function() {
+        let figure = makeDefaultFigure(0, -2);
+        let field = new Field(new Cells(30, 20));
+        expect(field.canPlaceFigure(figure)).toBe(false);
+    });
+
     function setLine(field, y) {
         for (let x = 0; x < field.width; x++) {
             field._cells.set(x, y);

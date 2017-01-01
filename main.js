@@ -29,6 +29,17 @@ class Cells {
         return true;
     }
 
+    isInBounds(x, y) {
+        if (!(x >= 0 && x < this.width)) {
+            return false;
+        }
+        if (!(y >= 0 && y < this.height)) {
+            return false;
+        }
+        return true;
+    }
+
+
     isSet(x, y) {
         this._checkBorders(x, y);
         return this.cells[y][x];
@@ -75,8 +86,9 @@ class Cells {
     }
 
     _checkBorders(x, y) {
-        console.assert(x >= 0 && x < this.width, x);
-        console.assert(y >= 0 && y < this.height, y);
+        if (!this.isInBounds(x, y)) {
+            throw `out of bounds: (${x}, ${y})`
+        }
     }
 }
 
@@ -153,6 +165,9 @@ class Field {
 
     canPlaceFigure(figure) {
         for (let point of figure.getCellPoints()) {
+            if (!this._cells.isInBounds(point.x, point.y)) {
+                return false;
+            }
             if (this._cells.isSet(point.x, point.y)) {
                 return false;
             }
