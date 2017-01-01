@@ -112,6 +112,14 @@ class Field {
         return this._cells.height;
     }
 
+    isSet(x, y) {
+        return this._cells.isSet(x, y);
+    }
+
+    set(x, y) {
+        return this._cells.set(x, y);
+    }
+
     unsetLine(y) {
         for (let x = 0; x < this.width; x++) {
             this._cells.unset(x, y);
@@ -266,30 +274,49 @@ class Scorer {
 class Game {
     constructor(field, canvasElement, scoreElement) {
         this.field = field;
+        this.figure = null;
         this.canvasElement = canvasElement;
         this.scoreElement = scoreElement;
         this.scorer = new Scorer();
+        this.scale = 20;
         this.events = [];
     }
 
     loop() {
+        this.setFigureIfAbsent();
+        if (this.isOver) {
+            alert('Game over!');
+        }
         this.render();
-        setTimeout(this.loop, (4 - this.scorer.speed) * 250);
+        this.tryToMoveFigureDown();
+        setTimeout(() => this.loop(), (4 - this.scorer.speed) * 250);
+    }
+
+    get isOver() {
+        if (!this.field.canPlaceFigure(this.figure)) {
+            return true;
+        }
+        return false;
+    }
+
+    setFigureIfAbsent() {
+        if (this.figure !== null) {
+            return;
+        }
+        this.figure = this.generateFigure();
     }
 
     render() {
+        console.log('render');
         this.renderScore();
         this.clearCanvas();
         this.renderField();
+        this.renderFigure();
     }
 
-    prepareCanvas(width, height) {
-        this.canvasElement.width = this.unitsToPixelsSize(width);
-        this.canvasElement.height = this.unitsToPixelsSize(height);
-    }
-
-    pixelsToUnitsSize(pixels) {
-        return pixels / this.scale;
+    prepareCanvas() {
+        this.canvasElement.width = this.unitsToPixelsSize(this.field.width);
+        this.canvasElement.height = this.unitsToPixelsSize(this.field.height);
     }
 
     unitsToPixelsSize(units) {
@@ -307,16 +334,24 @@ class Game {
     }
 
     clearCanvas() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.clearRect(
+            0, 0,
+            this.canvasElement.width, this.canvasElement.height);
     }
 
     renderField() {
         for (let x = 0; x < this.field.width; x++) {
             for (let y = 0; y < this.field.height; y++) {
-                if (this.field.cells.isSet(x, y)) {
+                if (this.field.isSet(x, y)) {
                     this.renderSquare(x, y);
                 }
             }
+        }
+    }
+
+    renderFigure() {
+        for (let point of this.figure.getCellPoints()) {
+            this.renderSquare(point.x, point.y);
         }
     }
 
@@ -327,10 +362,11 @@ class Game {
     }
 
     static run() {
-        let field = new Field(new Cells(12, 30));
+        let field = new Field(new Cells(12, 15));
         let canvasElement = document.getElementById('field-canvas');
         let scoreElement = document.getElementById('score');
         let game = new Game(field, canvasElement, scoreElement);
+        game.prepareCanvas();
         game.listenToEvents();
         game.loop();
     }
@@ -347,4 +383,54 @@ class Game {
     renderScore() {
         this.scoreElement.innerText = this.scorer.score.toString();
     }
+
+    generateFigure() {
+        let i = Math.floor(Math.random() * KNOWN_CELLS.length);
+        let cells = KNOWN_CELLS[i];
+
+        return new Figure(x, y, cells)
+    }
+
+    tryToMoveFigureDown() {
+        let movedDown = this.figure.copyAndMove(0, -1);
+        if (this.field.canPlaceFigure(movedDown)) {
+            this.figure = movedDown;
+        } else {
+            for (let point of this.figure.getCellPoints()) {
+                this.field.set(point.x, point, y)
+            }
+            this.figure = null;
+        }
+    }
 }
+
+
+/**
+ * @return {Cells}
+ */
+function makeCells(s) {
+    let lines = s.split("\n")
+        .map(aLine => aLine.trim())
+        .filter(aLine => aLine !== "");
+    let width = Math.max(...lines.map(aLine => aLine.length));
+    let height = lines.length;
+    let cells = new Cells(width, height);
+    for (let [y, aLine] of lines.reverse().entries()) {
+        for (let [x, char] of aLine.split("").entries()) {
+            if (char === "x") {
+                cells.set(x, y);
+            }
+        }
+    }
+    return cells;
+}
+
+const KNOWN_CELLS = [
+    makeCells(`
+      ooooo
+      ooxoo
+      oxxxo
+      ooooo
+      ooooo
+`),
+];

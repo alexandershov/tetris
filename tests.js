@@ -190,24 +190,3 @@ function makeDefaultFigure(x, y) {
 function makeFigure(x, y, s) {
     return new Figure(x, y, makeCells(s));
 }
-
-
-/**
- * @return {Cells}
- */
-function makeCells(s) {
-    let lines = s.split("\n")
-        .map(aLine => aLine.trim())
-        .filter(aLine => aLine !== "");
-    let width = Math.max(...lines.map(aLine => aLine.length));
-    let height = lines.length;
-    let cells = new Cells(width, height);
-    for (let [y, aLine] of lines.reverse().entries()) {
-        for (let [x, char] of aLine.split("").entries()) {
-            if (char === "x") {
-                cells.set(x, y);
-            }
-        }
-    }
-    return cells;
-}
