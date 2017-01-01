@@ -25,9 +25,7 @@ describe("Field", function () {
     let notEmptyField;
 
     beforeEach(function () {
-        let cells = new Cells(30, 20);
-
-        emptyField = new Field(cells);
+        emptyField = new Field(30, 20);
         notEmptyField = makeField(`
         xox
         xxx
@@ -54,7 +52,7 @@ describe("Field", function () {
         oxx
 `);
         notEmptyField.clearFilledLines();
-        expect(notEmptyField.cells).toEqual(expectedField.cells);
+        expect(notEmptyField).toEqual(expectedField);
     });
 
     it("allows valid figure to be placed", function () {
@@ -167,7 +165,7 @@ describe("Figure", function () {
  * @return {Field}
  */
 function makeField(s) {
-    return new Field(Cells.fromAsciiDrawing(s));
+    return Field.fromAsciiDrawing(s);
 }
 
 function makeDefaultFigure(x, y) {

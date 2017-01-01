@@ -27,7 +27,7 @@ class Cells {
     constructor(width, height, grid = null) {
         this.width = width;
         this.height = height;
-        this._grid = grid || Cells._make2DArray(this.width, this.height);
+        this._grid = grid || Cells._makeGrid(this.width, this.height);
     }
 
     isInBounds(x, y) {
@@ -103,7 +103,7 @@ class Cells {
     }
 
 
-    static _make2DArray(width, height) {
+    static _makeGrid(width, height) {
         let result = new Array(height);
         for (let i = 0; i < height; i++) {
             result[i] = new Array(width);
@@ -126,7 +126,7 @@ class Cells {
             .filter(aLine => aLine !== "");
         let width = Math.max(...lines.map(aLine => aLine.length));
         let height = lines.length;
-        let cells = new Cells(width, height);
+        let cells = new this(width, height);
         for (let [y, aLine] of lines.reverse().entries()) {
             for (let [x, char] of aLine.split("").entries()) {
                 if (char === "x") {
@@ -138,42 +138,11 @@ class Cells {
     }
 }
 
-class Field {
-
-    /**
-     *
-     * @param cells {Cells}
-     */
-    constructor(cells) {
-        this.cells = cells;
-    }
-
-    get width() {
-        return this.cells.width;
-    }
-
-    get height() {
-        return this.cells.height;
-    }
-
-    isSet(x, y) {
-        return this.cells.isSet(x, y);
-    }
-
-    set(x, y) {
-        return this.cells.set(x, y);
-    }
+class Field extends Cells {
 
     unsetLine(y) {
         for (let x = 0; x < this.width; x++) {
-            this.cells.unset(x, y);
-        }
-
-    }
-
-    *columnNumbers() {
-        for (let x = 0; x < this.width; x++) {
-            yield x;
+            this.unset(x, y);
         }
     }
 
@@ -203,7 +172,7 @@ class Field {
 
     isLineFilled(y) {
         for (let x = 0; x < this.width; x++) {
-            if (!this.cells.isSet(x, y)) {
+            if (!this.isSet(x, y)) {
                 return false;
             }
         }
@@ -219,16 +188,16 @@ class Field {
 
     copyLine(ySrc, yDest) {
         for (let x = 0; x < this.width; x++) {
-            this.cells.set(x, yDest, this.cells.isSet(x, ySrc));
+            this.set(x, yDest, this.isSet(x, ySrc));
         }
     }
 
     canPlaceFigure(figure) {
         for (let point of figure.getCellPoints()) {
-            if (!this.cells.isInBounds(point.x, point.y)) {
+            if (!this.isInBounds(point.x, point.y)) {
                 return false;
             }
-            if (this.cells.isSet(point.x, point.y)) {
+            if (this.isSet(point.x, point.y)) {
                 return false;
             }
         }
@@ -409,7 +378,7 @@ class Game {
     }
 
     static run() {
-        let field = new Field(new Cells(15, 22));
+        let field = new Field(15, 22);
         let canvasElement = document.getElementById('field-canvas');
         let scoreElement = document.getElementById('score');
         let game = new Game(field, canvasElement, scoreElement);
