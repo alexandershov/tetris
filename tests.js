@@ -146,7 +146,7 @@ describe("Figure", function () {
 
     it("can copy and move", function () {
         let figure = makeDefaultFigure(2, 3);
-        let movedCopy = figure.copyAndMove(1, 2);
+        let movedCopy = figure.copyAndApplyEvent(new Event(1, 2));
         expect(movedCopy.getCellPoints()).toEqual([
             new Point(3, 6),
             new Point(4, 6),
@@ -157,7 +157,7 @@ describe("Figure", function () {
 
     it("can copy and rotate", function () {
         let figure = makeDefaultFigure(2, 3);
-        let rotatedCopy = figure.copyAndRotate();
+        let rotatedCopy = figure.copyAndApplyEvent(new Event(0, 0, true));
         let expectedFigure = makeFigure(2, 3, `
         oxo
         oxx

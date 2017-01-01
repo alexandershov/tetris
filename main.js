@@ -1,4 +1,20 @@
-const KNOWN_EVENTS = new Set();
+class Event {
+    constructor(deltaX, deltaY, hasRotation = false) {
+        this.deltaX = deltaX;
+        this.deltaY = deltaY;
+        this.hasRotation = hasRotation;
+    }
+}
+
+
+const KNOWN_EVENTS = new Map(
+    [
+        ['ArrowDown', new Event(0, -1)],
+        ['ArrowLeft', new Event(-1, 0)],
+        ['ArrowRight', new Event(1, 0)],
+        ['ArrowUp', new Event(0, 0, true)],
+    ]
+);
 
 class Point {
     constructor(x, y) {
@@ -215,9 +231,12 @@ class Figure {
         return cellPoints;
     }
 
-    copyAndMove(deltaX, deltaY) {
+    copyAndApplyEvent(event) {
         let copy = this.copy();
-        copy.move(deltaX, deltaY);
+        if (event.hasRotation) {
+            copy.rotate();
+        }
+        copy.move(event.deltaX, event.deltaY);
         return copy;
     }
 
@@ -225,13 +244,6 @@ class Figure {
         this.x += deltaX;
         this.y += deltaY;
     }
-
-    copyAndRotate() {
-        let copy = this.copy();
-        copy.rotate();
-        return copy;
-    }
-
 
     rotate() {
         this._cells.rotate();
@@ -286,17 +298,17 @@ class Game {
         this.setFigureIfAbsent();
         if (this.isOver) {
             alert('Game over!');
+            return;
         }
         this.render();
-        this.tryToMoveFigure(0, -1, true);
+        this.handleEvents();
+        this.tryToMoveFigure(new Event(0, -1), true);
         setTimeout(() => this.loop(), (4 - this.scorer.speed) * 250);
     }
 
     get isOver() {
-        if (!this.field.canPlaceFigure(this.figure)) {
-            return true;
-        }
-        return false;
+        return !this.field.canPlaceFigure(this.figure);
+
     }
 
     setFigureIfAbsent() {
@@ -329,7 +341,6 @@ class Game {
 
     renderSquare(x, y) {
         let topLeft = this.topLeftPoint(x, y);
-        console.log('drawing square at', topLeft.x, topLeft.y);
         this.context.fillRect(topLeft.x, topLeft.y, this.scale, this.scale);
     }
 
@@ -362,7 +373,7 @@ class Game {
     }
 
     static run() {
-        let field = new Field(new Cells(20, 30));
+        let field = new Field(new Cells(15, 22));
         let canvasElement = document.getElementById('field-canvas');
         let scoreElement = document.getElementById('score');
         let game = new Game(field, canvasElement, scoreElement);
@@ -372,10 +383,11 @@ class Game {
     }
 
     listenToEvents() {
-        document.addEventListener('keydown', function (event) {
-            if (KNOWN_EVENTS.has(event.key)) {
-                this.events.push(event.key);
-                console.log('got event', event.key);
+        document.addEventListener('keyup', keyUpEvent => {
+            if (KNOWN_EVENTS.has(keyUpEvent.key)) {
+                console.log('got event', keyUpEvent.key);
+                let event = KNOWN_EVENTS.get(keyUpEvent.key);
+                this.events.push(event);
             }
         });
     }
@@ -393,8 +405,8 @@ class Game {
         return new Figure(x, y, cells);
     }
 
-    tryToMoveFigure(deltaX, deltaY, createNewIfImpossible) {
-        let movedFigure = this.figure.copyAndMove(deltaX, deltaY);
+    tryToMoveFigure(event) {
+        let movedFigure = this.figure.copyAndApplyEvent(event);
         if (this.field.canPlaceFigure(movedFigure)) {
             this.figure = movedFigure;
         } else if (createNewIfImpossible) {
@@ -403,6 +415,15 @@ class Game {
             }
             this.figure = null;
         }
+    }
+
+    handleEvents() {
+        if (this.events.length === 0) {
+            return;
+        }
+        let event = this.events[0];
+        this.tryToMoveFigure(event);
+        this.events = this.events.slice(1);
     }
 }
 
