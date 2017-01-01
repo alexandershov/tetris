@@ -287,7 +287,6 @@ class Game {
 
     loop() {
         if (this.isOver) {
-            alert('Game over!');
             return;
         }
         this.tryToMoveFigure(new Movement(0, -1), true);
@@ -297,7 +296,6 @@ class Game {
 
     get isOver() {
         return !this.field.canPlaceFigure(this.figure);
-
     }
 
     render() {
@@ -306,6 +304,10 @@ class Game {
         this.clearCanvas();
         this.renderField();
         this.renderFigure();
+        if (this.isOver) {
+            // alert after small timeout, so canvas will be redrawn
+            setTimeout(() => alert('game over'), 10);
+        }
     }
 
     prepareCanvas() {
@@ -343,9 +345,6 @@ class Game {
     }
 
     renderFigure() {
-        if (this.figure === null) {
-            return;
-        }
         for (let point of this.figure.getCellPoints()) {
             this.renderSquare(point.x, point.y);
         }
@@ -394,6 +393,7 @@ class Game {
         return new Figure(x, y, cells);
     }
 
+    // TODO: move out flag out of this function
     tryToMoveFigure(movement, createNewIfImpossible) {
         let movedFigure = this.figure.copyAndApplyMovement(movement);
         if (this.field.canPlaceFigure(movedFigure)) {
