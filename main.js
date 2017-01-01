@@ -34,10 +34,7 @@ class Cells {
         if (!(x >= 0 && x < this.width)) {
             return false;
         }
-        if (!(y >= 0 && y < this.height)) {
-            return false;
-        }
-        return true;
+        return y >= 0 && y < this.height;
     }
 
     isSet(x, y) {
@@ -417,8 +414,8 @@ class Game {
     }
 
     generateFigure() {
-        let i = Math.floor(Math.random() * KNOWN_CELLS.length);
-        let cells = KNOWN_CELLS[i];
+        let i = Math.floor(Math.random() * KNOWN_FIGURE_CELLS.length);
+        let cells = KNOWN_FIGURE_CELLS[i];
         let x = Math.floor(this.field.width / 2 - cells.width / 2);
         let maxSetY = cells.maxSetY();
         if (maxSetY === -1) {
@@ -457,7 +454,7 @@ class Game {
 }
 
 
-const KNOWN_CELLS = [
+const KNOWN_FIGURE_CELLS = [
     Cells.fromAsciiDrawing(`
       ooooo
       ooxoo
