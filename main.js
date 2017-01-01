@@ -294,7 +294,7 @@ class Game {
         this.events = [];
     }
 
-    loop() {
+    loop(isByTimer = true) {
         this.setFigureIfAbsent();
         if (this.isOver) {
             alert('Game over!');
@@ -302,8 +302,10 @@ class Game {
         }
         this.render();
         this.handleEvents();
-        this.tryToMoveFigure(new Event(0, -1), true);
-        setTimeout(() => this.loop(), (4 - this.scorer.speed) * 250);
+        if (isByTimer) {
+            this.tryToMoveFigure(new Event(0, -1), true);
+            setTimeout(() => this.loop(), (4 - this.scorer.speed) * 250);
+        }
     }
 
     get isOver() {
@@ -388,6 +390,7 @@ class Game {
                 console.log('got event', keyUpEvent.key);
                 let event = KNOWN_EVENTS.get(keyUpEvent.key);
                 this.events.push(event);
+                this.loop(false);
             }
         });
     }
@@ -405,7 +408,7 @@ class Game {
         return new Figure(x, y, cells);
     }
 
-    tryToMoveFigure(event) {
+    tryToMoveFigure(event, createNewIfImpossible) {
         let movedFigure = this.figure.copyAndApplyEvent(event);
         if (this.field.canPlaceFigure(movedFigure)) {
             this.figure = movedFigure;
@@ -413,7 +416,12 @@ class Game {
             for (let point of this.figure.getCellPoints()) {
                 this.field.set(point.x, point.y);
             }
+            for (let line of this.field.getFilledLines()) {
+                console.log('line', line, 'is filled');
+                this.scorer.onFilledLine();
+            }
             this.figure = null;
+            this.field.clearFilledLines();
         }
     }
 
