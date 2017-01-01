@@ -69,7 +69,7 @@ class Cells {
     }
 
     *reversedLineNumbers() {
-        for (let y = this.height - 1; y >= 0; y++) {
+        for (let y = this.height - 1; y >= 0; y--) {
             yield y;
         }
     }
