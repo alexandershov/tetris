@@ -62,8 +62,8 @@ class Cells {
         }
     }
 
-    *lineNumbers() {
-        for (let y = 0; y < this.height; y++) {
+    *lineNumbers(start=0) {
+        for (let y = start; y < this.height; y++) {
             yield y;
         }
     }
@@ -141,14 +141,14 @@ class Cells {
 class Field extends Cells {
 
     unsetLine(y) {
-        for (let x = 0; x < this.width; x++) {
+        for (let x of this.columnNumbers()) {
             this.unset(x, y);
         }
     }
 
     getFilledLines() {
         let result = [];
-        for (let y = 0; y < this.height; y++) {
+        for (let y of this.lineNumbers()) {
             if (this.isLineFilled(y)) {
                 result.push(y);
             }
@@ -157,21 +157,19 @@ class Field extends Cells {
     }
 
     clearFilledLines() {
-        let numCheckedLines = 0;
         let y = 0;
-        while (numCheckedLines < this.height) {
+        for (let _ of this.lineNumbers()) {
             if (this.isLineFilled(y)) {
                 this.unsetLine(y);
                 this.moveAboveLinesDown(y)
             } else {
                 y++;
             }
-            numCheckedLines++;
         }
     }
 
     isLineFilled(y) {
-        for (let x = 0; x < this.width; x++) {
+        for (let x of this.columnNumbers()) {
             if (!this.isSet(x, y)) {
                 return false;
             }
@@ -180,14 +178,14 @@ class Field extends Cells {
     }
 
     moveAboveLinesDown(y) {
-        for (let i = y + 1; i < this.height; i++) {
+        for (let i of this.lineNumbers(y + 1)) {
             this.copyLine(i, i - 1);
             this.unsetLine(i);
         }
     }
 
     copyLine(ySrc, yDest) {
-        for (let x = 0; x < this.width; x++) {
+        for (let x of this.columnNumbers()) {
             this.set(x, yDest, this.isSet(x, ySrc));
         }
     }
