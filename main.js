@@ -30,23 +30,6 @@ class Cells {
         this.cells = Cells._make2DArray(this.width, this.height);
     }
 
-    isEqualTo(other) {
-        if (this.width !== other.width) {
-            return false;
-        }
-        if (this.height !== other.height) {
-            return false;
-        }
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
-                if (this.isSet(x, y) !== other.isSet(x, y)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     isInBounds(x, y) {
         if (!(x >= 0 && x < this.width)) {
             return false;
@@ -56,7 +39,6 @@ class Cells {
         }
         return true;
     }
-
 
     isSet(x, y) {
         this._checkBorders(x, y);

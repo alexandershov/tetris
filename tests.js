@@ -54,7 +54,7 @@ describe("Field", function () {
         oxx
 `);
         notEmptyField.clearFilledLines();
-        expect(notEmptyField._cells.isEqualTo(expectedField._cells)).toBe(true);
+        expect(notEmptyField._cells).toEqual(expectedField._cells);
     });
 
     it("allows valid figure to be placed", function () {
