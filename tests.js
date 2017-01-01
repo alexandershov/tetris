@@ -17,6 +17,16 @@ describe("Field", function () {
         expect(field.isSet(0, 0)).toBe(false);
     });
 
+    it("gets the number of filled lines", function() {
+        let field = makeField(`
+        xox
+        xxx
+        oxx
+        xxx
+`);
+        expect(field.getFilledLines()).toEqual([0, 2]);
+    });
+
     it("clears one filled line", function () {
         let field = new Field(30, 20);
         setLine(field, 0);
@@ -56,6 +66,9 @@ describe("Field", function () {
         return true;
     }
 
+    /**
+     * @return {Field}
+     */
     function makeField(s) {
         let lines = s.split("\n")
             .map(aLine => aLine.trim())

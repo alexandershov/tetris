@@ -26,6 +26,16 @@ class Field {
 
     }
 
+    getFilledLines() {
+        let result = [];
+        for (let y = 0; y < this.height; y++) {
+            if (this.isLineFilled(y)) {
+                result.push(y);
+            }
+        }
+        return result;
+    }
+
     clearFilledLines() {
         let numCheckedLines = 0;
         let y = 0;
