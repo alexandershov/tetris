@@ -54,7 +54,7 @@ describe("Field", function () {
         oxx
 `);
         notEmptyField.clearFilledLines();
-        expect(notEmptyField._cells).toEqual(expectedField._cells);
+        expect(notEmptyField.cells).toEqual(expectedField.cells);
     });
 
     it("allows valid figure to be placed", function () {
@@ -79,13 +79,13 @@ describe("Field", function () {
 
     function setLine(field, y) {
         for (let x = 0; x < field.width; x++) {
-            field._cells.set(x, y);
+            field.cells.set(x, y);
         }
     }
 
     function isLineClear(field, y) {
         for (let x = 0; x < field.width; x++) {
-            if (field._cells.isSet(x, y)) {
+            if (field.cells.isSet(x, y)) {
                 return false;
             }
         }
@@ -135,7 +135,7 @@ describe("Figure", function () {
     it("can copy itself", function () {
         let figure = makeDefaultFigure(2, 3);
         let movedCopy = figure.copy();
-        movedCopy._cells.set(0, 0);
+        movedCopy.cells.set(0, 0);
         expect(figure.getCellPoints()).toEqual([
             new Point(2, 4),
             new Point(3, 4),

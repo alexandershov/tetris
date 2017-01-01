@@ -111,28 +111,28 @@ class Field {
      * @param cells {Cells}
      */
     constructor(cells) {
-        this._cells = cells;
+        this.cells = cells;
     }
 
     get width() {
-        return this._cells.width;
+        return this.cells.width;
     }
 
     get height() {
-        return this._cells.height;
+        return this.cells.height;
     }
 
     isSet(x, y) {
-        return this._cells.isSet(x, y);
+        return this.cells.isSet(x, y);
     }
 
     set(x, y) {
-        return this._cells.set(x, y);
+        return this.cells.set(x, y);
     }
 
     unsetLine(y) {
         for (let x = 0; x < this.width; x++) {
-            this._cells.unset(x, y);
+            this.cells.unset(x, y);
         }
 
     }
@@ -163,7 +163,7 @@ class Field {
 
     isLineFilled(y) {
         for (let x = 0; x < this.width; x++) {
-            if (!this._cells.isSet(x, y)) {
+            if (!this.cells.isSet(x, y)) {
                 return false;
             }
         }
@@ -179,16 +179,16 @@ class Field {
 
     copyLine(ySrc, yDest) {
         for (let x = 0; x < this.width; x++) {
-            this._cells.set(x, yDest, this._cells.isSet(x, ySrc));
+            this.cells.set(x, yDest, this.cells.isSet(x, ySrc));
         }
     }
 
     canPlaceFigure(figure) {
         for (let point of figure.getCellPoints()) {
-            if (!this._cells.isInBounds(point.x, point.y)) {
+            if (!this.cells.isInBounds(point.x, point.y)) {
                 return false;
             }
-            if (this._cells.isSet(point.x, point.y)) {
+            if (this.cells.isSet(point.x, point.y)) {
                 return false;
             }
         }
@@ -201,22 +201,22 @@ class Figure {
     constructor(x, y, cells) {
         this.x = x;
         this.y = y;
-        this._cells = cells;
+        this.cells = cells;
     }
 
     get width() {
-        return this._cells.width;
+        return this.cells.width;
     }
 
     get height() {
-        return this._cells.height;
+        return this.cells.height;
     }
 
     getCellPoints() {
         let cellPoints = [];
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
-                if (this._cells.isSet(x, y)) {
+                if (this.cells.isSet(x, y)) {
                     let point = new Point(this.x + x, this.y + y);
                     cellPoints.push(point);
                 }
@@ -240,7 +240,7 @@ class Figure {
     }
 
     rotate() {
-        this._cells.rotate();
+        this.cells.rotate();
     }
 
 
@@ -248,7 +248,7 @@ class Figure {
         return new Figure(
             this.x,
             this.y,
-            this._cells.copy()
+            this.cells.copy()
         );
     }
 }
