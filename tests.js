@@ -102,11 +102,17 @@ describe("Game", function () {
 
 describe("Figure", function () {
     it("has position", function () {
-        let figure = makeFigure(`
+        let figure = makeFigure(2, 3, `
         oxo
         xxx
         ooo
 `);
+        expect(figure.getCellPoints()).toEqual([
+            new Point(2, 4),
+            new Point(3, 4),
+            new Point(4, 4),
+            new Point(3, 5),
+        ]);
     });
 });
 
@@ -121,8 +127,8 @@ function makeField(s) {
 /**
  * @return {Figure}
  */
-function makeFigure(s) {
-    return new Figure(makeCells(s));
+function makeFigure(x, y, s) {
+    return new Figure(x, y, makeCells(s));
 }
 
 

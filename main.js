@@ -1,3 +1,11 @@
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+}
+
 class Cells {
     constructor(width, height) {
         this.width = width;
@@ -131,6 +139,27 @@ class Figure {
         this.x = x;
         this.y = y;
         this._cells = cells;
+    }
+
+    get width() {
+        return this._cells.width;
+    }
+
+    get height() {
+        return this._cells.height;
+    }
+
+    getCellPoints() {
+        let cellPoints = [];
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                if (this._cells.isSet(x, y)) {
+                    let point = new Point(this.x + x, this.y + y);
+                    cellPoints.push(point);
+                }
+            }
+        }
+        return cellPoints;
     }
 }
 
