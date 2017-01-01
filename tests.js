@@ -167,7 +167,7 @@ describe("Figure", function () {
  * @return {Field}
  */
 function makeField(s) {
-    return new Field(makeCells(s));
+    return new Field(Cells.fromAsciiDrawing(s));
 }
 
 function makeDefaultFigure(x, y) {
@@ -182,5 +182,5 @@ function makeDefaultFigure(x, y) {
  * @return {Figure}
  */
 function makeFigure(x, y, s) {
-    return new Figure(x, y, makeCells(s));
+    return new Figure(x, y, Cells.fromAsciiDrawing(s));
 }

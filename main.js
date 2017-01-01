@@ -102,6 +102,23 @@ class Cells {
             throw `out of bounds: (${x}, ${y})`
         }
     }
+
+    static fromAsciiDrawing(s) {
+        let lines = s.split("\n")
+            .map(aLine => aLine.trim())
+            .filter(aLine => aLine !== "");
+        let width = Math.max(...lines.map(aLine => aLine.length));
+        let height = lines.length;
+        let cells = new Cells(width, height);
+        for (let [y, aLine] of lines.reverse().entries()) {
+            for (let [x, char] of aLine.split("").entries()) {
+                if (char === "x") {
+                    cells.set(x, y);
+                }
+            }
+        }
+        return cells;
+    }
 }
 
 class Field {
@@ -141,7 +158,7 @@ class Field {
         for (let x = 0; x < this.width; x++) {
             yield x;
         }
-}
+    }
 
     getFilledLines() {
         let result = [];
@@ -443,66 +460,51 @@ class Game {
 /**
  * @return {Cells}
  */
-function makeCells(s) {
-    let lines = s.split("\n")
-        .map(aLine => aLine.trim())
-        .filter(aLine => aLine !== "");
-    let width = Math.max(...lines.map(aLine => aLine.length));
-    let height = lines.length;
-    let cells = new Cells(width, height);
-    for (let [y, aLine] of lines.reverse().entries()) {
-        for (let [x, char] of aLine.split("").entries()) {
-            if (char === "x") {
-                cells.set(x, y);
-            }
-        }
-    }
-    return cells;
-}
+
 
 const KNOWN_CELLS = [
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       ooooo
       ooxoo
       oxxxo
       ooooo
       ooooo
 `),
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       ooooo
       ooxoo
       ooxoo
       ooxoo
       ooxoo
 `),
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       oooo
       oxxo
       oxxo
       oooo
 `),
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       ooooo
       ooxxo
       ooxoo
       ooxoo
       ooooo
 `),
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       ooooo
       oxxoo
       ooxoo
       ooxoo
       ooooo
 `),
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       ooooo
       oooxo
       ooxxo
       ooxoo
       ooooo
 `),
-    makeCells(`
+    Cells.fromAsciiDrawing(`
       ooooo
       oxooo
       oxxoo
