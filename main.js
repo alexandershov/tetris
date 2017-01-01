@@ -272,7 +272,7 @@ class Scorer {
         this.score += this.scoreIncrement;
     }
 
-    get speed() {
+    get speedLevel() {
         for (let [i, level] of this._speedLevels.entries()) {
             if (this.score < level) {
                 return i;
@@ -304,7 +304,7 @@ class Game {
         this.render();
         if (isByTimer) {
             this.tryToMoveFigure(new Event(0, -1), true);
-            setTimeout(() => this.loop(), (4 - this.scorer.speed) * 150);
+            setTimeout(() => this.loop(), (4 - this.scorer.speedLevel) * 150);
         }
     }
 

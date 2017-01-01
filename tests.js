@@ -95,27 +95,25 @@ describe("Field", function () {
 
 describe("Scorer", function () {
     it("has zero initial score", function () {
-        let game = new Scorer();
-        expect(game.score).toEqual(0);
+        let scorer = new Scorer();
+        expect(scorer.score).toEqual(0);
     });
 
     it("increments score", function () {
-        let game = new Scorer(150);
-        game.onFilledLine();
-        expect(game.score).toEqual(150);
+        let scorer = new Scorer(150);
+        scorer.onFilledLine();
+        expect(scorer.score).toEqual(150);
     });
 
     it("increments speed with score", function () {
-        let game = new Scorer(150, [1000, 1100]);
-        expect(game.speed).toEqual(0);
-        for (let i = 0; i < 6; i++) {
-            game.onFilledLine();
-        }
-        expect(game.speed).toEqual(0);
-        game.onFilledLine();
-        expect(game.speed).toEqual(1);
-        game.onFilledLine();
-        expect(game.speed).toEqual(2);
+        let scorer = new Scorer(150, [200, 350]);
+        expect(scorer.speedLevel).toEqual(0);
+        scorer.onFilledLine();
+        expect(scorer.speedLevel).toEqual(0);
+        scorer.onFilledLine();
+        expect(scorer.speedLevel).toEqual(1);
+        scorer.onFilledLine();
+        expect(scorer.speedLevel).toEqual(2);
     });
 });
 
