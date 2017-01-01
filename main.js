@@ -1,4 +1,4 @@
-class Event {
+class Movement {
     constructor(deltaX, deltaY, hasRotation = false) {
         this.deltaX = deltaX;
         this.deltaY = deltaY;
@@ -7,12 +7,12 @@ class Event {
 }
 
 
-const KNOWN_EVENTS = new Map(
+const EVENT_TO_MOVEMENT_MAPPING = new Map(
     [
-        ['ArrowDown', new Event(0, -1)],
-        ['ArrowLeft', new Event(-1, 0)],
-        ['ArrowRight', new Event(1, 0)],
-        ['ArrowUp', new Event(0, 0, true)],
+        ['ArrowDown', new Movement(0, -1)],
+        ['ArrowLeft', new Movement(-1, 0)],
+        ['ArrowRight', new Movement(1, 0)],
+        ['ArrowUp', new Movement(0, 0, true)],
     ]
 );
 
@@ -248,12 +248,12 @@ class Figure {
         return cellPoints;
     }
 
-    copyAndApplyEvent(event) {
+    copyAndApplyMovement(movement) {
         let copy = this.copy();
-        if (event.hasRotation) {
+        if (movement.hasRotation) {
             copy.rotate();
         }
-        copy.move(event.deltaX, event.deltaY);
+        copy.move(movement.deltaX, movement.deltaY);
         return copy;
     }
 
@@ -308,7 +308,7 @@ class Game {
         this.scoreElement = scoreElement;
         this.scorer = new Scorer();
         this.scale = 20;
-        this.events = [];
+        this.movements = [];
     }
 
     loop(isByTimer = true) {
@@ -317,10 +317,10 @@ class Game {
             alert('Game over!');
             return;
         }
-        this.handleEvents();
+        this.handleMovements();
         this.render();
         if (isByTimer) {
-            this.tryToMoveFigure(new Event(0, -1), true);
+            this.tryToMoveFigure(new Movement(0, -1), true);
             setTimeout(() => this.loop(), (4 - this.scorer.speedLevel) * 150);
         }
     }
@@ -402,11 +402,11 @@ class Game {
     }
 
     listenToEvents() {
-        document.addEventListener('keydown', keyUpEvent => {
-            if (KNOWN_EVENTS.has(keyUpEvent.key)) {
-                console.log('got event', keyUpEvent.key);
-                let event = KNOWN_EVENTS.get(keyUpEvent.key);
-                this.events.push(event);
+        document.addEventListener('keydown', event => {
+            if (EVENT_TO_MOVEMENT_MAPPING.has(event.key)) {
+                console.log('got event', event.key);
+                let movement = EVENT_TO_MOVEMENT_MAPPING.get(event.key);
+                this.movements.push(movement);
                 this.loop(false);
             }
         });
@@ -429,8 +429,8 @@ class Game {
         return new Figure(x, y, cells);
     }
 
-    tryToMoveFigure(event, createNewIfImpossible) {
-        let movedFigure = this.figure.copyAndApplyEvent(event);
+    tryToMoveFigure(movement, createNewIfImpossible) {
+        let movedFigure = this.figure.copyAndApplyMovement(movement);
         if (this.field.canPlaceFigure(movedFigure)) {
             this.figure = movedFigure;
         } else if (createNewIfImpossible) {
@@ -446,20 +446,15 @@ class Game {
         }
     }
 
-    handleEvents() {
-        if (this.events.length === 0) {
+    handleMovements() {
+        if (this.movements.length === 0) {
             return;
         }
-        let event = this.events[0];
-        this.tryToMoveFigure(event);
-        this.events = this.events.slice(1);
+        let movement = this.movements[0];
+        this.tryToMoveFigure(movement);
+        this.movements = this.movements.slice(1);
     }
 }
-
-
-/**
- * @return {Cells}
- */
 
 
 const KNOWN_CELLS = [
