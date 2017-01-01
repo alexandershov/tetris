@@ -27,7 +27,7 @@ class Cells {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.grid = Cells._make2DArray(this.width, this.height);
+        this._grid = Cells._make2DArray(this.width, this.height);
     }
 
     isInBounds(x, y) {
@@ -39,12 +39,12 @@ class Cells {
 
     isSet(x, y) {
         this._checkBorders(x, y);
-        return this.grid[y][x];
+        return this._grid[y][x];
     }
 
     set(x, y, value = true) {
         this._checkBorders(x, y);
-        this.grid[y][x] = value;
+        this._grid[y][x] = value;
     }
 
     unset(x, y) {
@@ -52,9 +52,9 @@ class Cells {
     }
 
     copy() {
-        let arrayCopy = this.grid.map(line => line.slice());
+        let arrayCopy = this._grid.map(line => line.slice());
         let result = new Cells(this.width, this.height);
-        result.grid = arrayCopy;
+        result._grid = arrayCopy;
         return result;
     }
 
@@ -62,13 +62,13 @@ class Cells {
         if (this.width !== this.height) {
             throw `${this.width} !== ${this.height}`;
         }
-        let arrayCopy = this.grid.map(line => line.slice());
+        let arrayCopy = this._grid.map(line => line.slice());
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
-                arrayCopy[this.height - x - 1][y] = this.grid[y][x];
+                arrayCopy[this.height - x - 1][y] = this._grid[y][x];
             }
         }
-        this.grid = arrayCopy;
+        this._grid = arrayCopy;
     }
 
     maxSetY() {
