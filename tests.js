@@ -1,17 +1,19 @@
 describe("Cells", function () {
+    let cells;
+    beforeEach(function() {
+        cells = new Cells(30, 20);
+    });
+
     it("is unset by default", function () {
-        let cells = new Cells(30, 20);
         expect(cells.isSet(0, 0)).toBe(false);
     });
 
     it("sets cells", function () {
-        let cells = new Cells(30, 20);
         cells.set(0, 0);
         expect(cells.isSet(0, 0)).toBe(true);
     });
 
     it("unsets cells", function () {
-        let cells = new Cells(30, 20);
         cells.set(0, 0);
         cells.unset(0, 0);
         expect(cells.isSet(0, 0)).toBe(false);
