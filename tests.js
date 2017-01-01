@@ -53,6 +53,12 @@ describe("Field", function () {
         expect(field._cells.isEqualTo(expectedField._cells)).toBe(true);
     });
 
+    it("allows valid figure to be placed", function() {
+        let figure = makeDefaultFigure(0, 0);
+        let field = new Field(new Cells(30, 20));
+        expect(field.canPlaceFigure(figure)).toBe(true);
+    });
+
     function setLine(field, y) {
         for (let x = 0; x < field.width; x++) {
             field._cells.set(x, y);
@@ -102,7 +108,7 @@ describe("Game", function () {
 
 describe("Figure", function () {
     it("has position", function () {
-        let figure = makeDefaultFigure();
+        let figure = makeDefaultFigure(2, 3);
         expect(figure.getCellPoints()).toEqual([
             new Point(2, 4),
             new Point(3, 4),
@@ -112,7 +118,7 @@ describe("Figure", function () {
     });
 
     it("can copy itself", function () {
-        let figure = makeDefaultFigure();
+        let figure = makeDefaultFigure(2, 3);
         let movedCopy = figure.copy();
         movedCopy._cells.set(0, 0);
         expect(figure.getCellPoints()).toEqual([
@@ -124,7 +130,7 @@ describe("Figure", function () {
     });
 
     it("can copy and move", function () {
-        let figure = makeDefaultFigure();
+        let figure = makeDefaultFigure(2, 3);
         let movedCopy = figure.copyAndMove(1, 2);
         expect(movedCopy.getCellPoints()).toEqual([
             new Point(3, 6),
@@ -135,7 +141,7 @@ describe("Figure", function () {
     });
 
     it("can copy and rotate", function () {
-        let figure = makeDefaultFigure();
+        let figure = makeDefaultFigure(2, 3);
         let rotatedCopy = figure.copyAndRotate();
         let expectedFigure = makeFigure(2, 3, `
         oxo
@@ -155,8 +161,8 @@ function makeField(s) {
 }
 
 
-function makeDefaultFigure() {
-    return makeFigure(2, 3, `
+function makeDefaultFigure(x, y) {
+    return makeFigure(x, y, `
         oxo
         xxx
         ooo

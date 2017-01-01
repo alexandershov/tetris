@@ -150,6 +150,15 @@ class Field {
             this._cells.set(x, yDest, this._cells.isSet(x, ySrc));
         }
     }
+
+    canPlaceFigure(figure) {
+        for (let point of figure.getCellPoints()) {
+            if (this._cells.isSet(point.x, point.y)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 
