@@ -30,7 +30,7 @@ class Field {
         let numCheckedLines = 0;
         let y = 0;
         while (numCheckedLines < this.height) {
-            if (this.isLineFull(y)) {
+            if (this.isLineFilled(y)) {
                 this.unsetLine(y);
                 this.moveAboveLinesDown(y)
             } else {
@@ -40,7 +40,7 @@ class Field {
         }
     }
 
-    isLineFull(y) {
+    isLineFilled(y) {
         for (let x = 0; x < this.width; x++) {
             if (!this.isSet(x, y)) {
                 return false;
