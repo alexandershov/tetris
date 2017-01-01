@@ -65,7 +65,13 @@ describe("Field", function () {
         expect(field.canPlaceFigure(figure)).toBe(true);
     });
 
-    it("disallows out of bounds figure to be placed", function() {
+    it("disallows out of bounds (by x) figure to be placed", function() {
+        let figure = makeDefaultFigure(-1, -1);
+        let field = new Field(new Cells(30, 20));
+        expect(field.canPlaceFigure(figure)).toBe(false);
+    });
+
+    it("disallows out of bounds (by y) figure to be placed", function() {
         let figure = makeDefaultFigure(0, -2);
         let field = new Field(new Cells(30, 20));
         expect(field.canPlaceFigure(figure)).toBe(false);
