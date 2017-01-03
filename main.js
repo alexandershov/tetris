@@ -38,12 +38,12 @@ class Cells {
     }
 
     isSet(x, y) {
-        this._checkBorders(x, y);
+        this._assertIsInBounds(x, y);
         return this._grid[y][x];
     }
 
     set(x, y, value = true) {
-        this._checkBorders(x, y);
+        this._assertIsInBounds(x, y);
         this._grid[y][x] = value;
     }
 
@@ -56,8 +56,8 @@ class Cells {
         return new Cells(this.width, this.height, gridCopy);
     }
 
-    *columnNumbers() {
-        for (let x = 0; x < this.width; x++) {
+    *columnNumbers(start = 0) {
+        for (let x = start; x < this.width; x++) {
             yield x;
         }
     }
@@ -91,7 +91,7 @@ class Cells {
         this._grid = gridCopy;
     }
 
-    maxSetY() {
+    maxNotEmptyLine() {
         for (let y of this.reversedLineNumbers()) {
             for (let x of this.columnNumbers()) {
                 if (this.isSet(x, y)) {
@@ -105,16 +105,16 @@ class Cells {
 
     static _makeGrid(width, height) {
         let result = new Array(height);
-        for (let i = 0; i < height; i++) {
-            result[i] = new Array(width);
-            for (let j = 0; j < width; j++) {
-                result[i][j] = false;
+        for (let y = 0; y < height; y++) {
+            result[y] = new Array(width);
+            for (let x = 0; x < width; x++) {
+                result[y][x] = false;
             }
         }
         return result;
     }
 
-    _checkBorders(x, y) {
+    _assertIsInBounds(x, y) {
         if (!this.isInBounds(x, y)) {
             throw `is out of bounds: (${x}, ${y})`
         }
@@ -412,11 +412,11 @@ class Game {
         let i = Math.floor(Math.random() * KNOWN_FIGURE_CELLS.length);
         let cells = KNOWN_FIGURE_CELLS[i];
         let x = Math.floor(this.field.width / 2 - cells.width / 2);
-        let maxSetY = cells.maxSetY();
+        let maxSetY = cells.maxNotEmptyLine();
         if (maxSetY === -1) {
             throw `maxSetY is equal to ${maxSetY}`;
         }
-        let y = this.field.height - cells.maxSetY() - 1;
+        let y = this.field.height - cells.maxNotEmptyLine() - 1;
         console.log('putting new figure at', x, y);
         return new Figure(x, y, cells);
     }
