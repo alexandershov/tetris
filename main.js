@@ -278,9 +278,9 @@ class Scorer {
 class Game {
     constructor(field, canvasElement, scoreElement) {
         this.field = field;
-        this.figure = this.getRandomFigure();
         this.canvasElement = canvasElement;
         this.scoreElement = scoreElement;
+        this.figure = this.getRandomFigure();
         this.scorer = new Scorer();
         this.scale = 20;
     }
@@ -412,9 +412,9 @@ class Game {
         let i = Math.floor(Math.random() * KNOWN_FIGURE_CELLS.length);
         let cells = KNOWN_FIGURE_CELLS[i];
         let x = Math.floor(this.field.width / 2 - cells.width / 2);
-        let maxSetY = cells.maxNotEmptyLine();
-        if (maxSetY === -1) {
-            throw `maxSetY is equal to ${maxSetY}`;
+        let maxNotEmptyLine = cells.maxNotEmptyLine();
+        if (maxNotEmptyLine === -1) {
+            throw `maxSetY is equal to ${maxNotEmptyLine}`;
         }
         let y = this.field.height - cells.maxNotEmptyLine() - 1;
         console.log('putting new figure at', x, y);
